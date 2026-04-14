@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity //entity used for MySQL and PostgreSQL
 @Table(name = "orders")
 @Data
 @NoArgsConstructor
