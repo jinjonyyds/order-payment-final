@@ -5,4 +5,5 @@ import com.rothur.orderservice.model.Order;
 
 public interface OrderService {
     Order createOrder(CreateOrderRequest request);
+    void updateOrderStatus(Long orderId, String status);
 }

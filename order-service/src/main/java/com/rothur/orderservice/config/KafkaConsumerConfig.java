@@ -1,6 +1,6 @@
-package com.rothur.paymentservice.config;
+package com.rothur.orderservice.config;
 
-import com.rothur.paymentservice.dto.OrderCreatedEvent;
+import com.rothur.orderservice.dto.PaymentCompletedEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +17,7 @@ import java.util.Map;
 @Configuration
 public class KafkaConsumerConfig {
     @Bean
-    public ConsumerFactory<String, OrderCreatedEvent> consumerFactory(
+    public ConsumerFactory<String, PaymentCompletedEvent> paymentCompletedConsumerFactory(
             @Value("${spring.kafka.bootstrap-servers}") String bootstrapServers
     ) {
         Map<String, Object> config = new HashMap<>();
@@ -25,22 +25,22 @@ public class KafkaConsumerConfig {
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 
-        config.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.rothur.paymentservice.dto.OrderCreatedEvent");
-
+        config.put(JsonDeserializer.VALUE_DEFAULT_TYPE,
+                "com.rothur.orderservice.dto.PaymentCompletedEvent");
         config.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
-
         config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
 
         return new DefaultKafkaConsumerFactory<>(config);
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, OrderCreatedEvent> kafkaListenerContainerFactory(
-            ConsumerFactory<String, OrderCreatedEvent> consumerFactory
+    public ConcurrentKafkaListenerContainerFactory<String, PaymentCompletedEvent>
+    paymentCompletedKafkaListenerContainerFactory(
+            ConsumerFactory<String, PaymentCompletedEvent> paymentCompletedConsumerFactory
     ) {
-        ConcurrentKafkaListenerContainerFactory<String, OrderCreatedEvent> factory =
+        ConcurrentKafkaListenerContainerFactory<String, PaymentCompletedEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory);
+        factory.setConsumerFactory(paymentCompletedConsumerFactory);
         return factory;
     }
 }
